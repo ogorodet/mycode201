@@ -1,0 +1,62 @@
+---
+- name: Query ISS api with Ansible
+  hosts: localhost
+  gather_facts: no     # set to true by default, runs the "setup" module
+  
+    
+  tasks:
+  - name: Print out to the screen
+    uri:
+      url: http://api.open-notify.org/iss-now.json
+    register: astrojson     # the "register" keyword is not part of the uri module
+                              # just like the "become" keyword, this augments how a module executes
+                              # in this case, we want to save the response returned by this module
+                              # ALL modules in Ansible return data. Think of it as the "results" of how the
+                              # task ran.
+                              #
+# - latitude
+# - longitude
+# - timestamp
+# - "gatorade" (but don't crash if it cannot be found)
+# - return JUST the integer associated with latitude
+# - return JUST the decimal associated with longitude
+# - from the return data also show the http "status" code
+# - from the return data also show the date / time 
+
+                              
+  - name: Display the contents of the variable astrojson
+    debug:
+      var: astrojson                                         
+  
+  - name: Display latitude
+    debug:
+      var: astrojson['json']['iss_position']['latitude']
+
+  - name: Display longtitude
+    debug:
+      var: astrojson['json']['iss_position']['longitude']
+
+  - name: Display timestamp
+    debug:
+        var: astrojson.json.timestamp
+
+  - name: Display gatorade
+    debug:
+      msg: "refrehing"
+    when: astrojson.get('gatorade','baja blast') == "baja blast"
+
+  - name: Display integer latitude
+    debug:
+      var: astrojson['json']['iss_position']['latitude'].split(".")[0]
+
+  - name: Display desimal longtitude
+    debug:
+      var: astrojson['json']['iss_position']['longitude'].split(".")[1]
+
+  - name: Display http status
+    debug:
+        var: astrojson.status
+
+  - name: Display date
+    debug:
+        var: astrojson.date
