@@ -1,0 +1,25 @@
+---
+- name: Query NASA Asteroids - NeoWs
+  hosts: localhost
+  gather_facts: no     # set to true by default, runs the "setup" module
+  
+    
+  tasks:
+  - name: Print out to the screen
+    uri:
+      url: https://api.nasa.gov/neo/rest/v1/feed?start_date=2015-09-07&end_date=2015-09-08&api_key=DEMO_KEY
+    register: asteroids
+                              
+  - name: Display all asteroids
+    debug:
+      var: asteroids
+  
+  - name: Display keys
+    debug:
+      var: asteroids.keys()
+
+
+  - name: Display latitude
+    debug:
+      var: asteroids.json
+
